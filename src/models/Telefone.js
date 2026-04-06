@@ -4,9 +4,10 @@ export class Telefone {
   #numero;
   //#dataCad;
 
-  constructor(idCliente, numero) {
+  constructor(idCliente, numero, id) {
     this.#idCliente = idCliente;
     this.#numero = numero;
+    this.#id = id;
   }
 
   get id() {
@@ -18,16 +19,23 @@ export class Telefone {
     this.#id = value;
   }
 
+  get numero() {
+    return this.#numero;
+  }
+
+  set numero(value) {
+    this.#validarNumero(value);
+    this.#numero = value;
+  }
+
   get idCliente() {
     return this.#idCliente;
   }
-  
+
   set idCliente(value) {
     this.#validarIdCliente(value);
     this.#idCliente = value;
   }
-
-
 
   // --- Validação --- //
 
@@ -41,5 +49,23 @@ export class Telefone {
     if (isNaN(value) || value.trim() <= 0) {
       throw new Error("O idCliente deve ser válido");
     }
+  }
+
+  #validarNumero(value) {
+    if (isNaN(value) || value.trim() <= 0) {
+      throw new Error("O Numero deve ser válido");
+    }
+  }
+
+  // Static
+
+  static criar(dados) {
+    return new Produtos(
+      dados.idCliente,
+      dados.numero,
+      dados.idCategoria,
+      dados.caminhoImagem,
+      null,
+    );
   }
 }
