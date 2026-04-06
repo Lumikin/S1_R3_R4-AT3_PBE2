@@ -1,4 +1,3 @@
-import produtoRepository from "../repositories/ProdutosRepositories.js";
 export class Produtos {
   #id;
   #nome;
