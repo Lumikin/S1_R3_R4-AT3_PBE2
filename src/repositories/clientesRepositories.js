@@ -1,7 +1,7 @@
 import { connection } from "../config/Database.js";
 
 const clientesRepositories = {
-  criar: async (cliente, telefone, endereco) => {
+  post: async (cliente, telefone, endereco) => {
     const conn = await connection.getConnection();
     try {
       conn.beginTransaction();
@@ -15,7 +15,7 @@ const clientesRepositories = {
       const [rowsTel] = await conn.execute(sqlTel, valuesTel);
 
       const sqlEnd =
-        "INSERT INTO telefone (idCliente, cep, logradouro, numero, complemento, bairro, cidade, uf) VALUES (?,?,?,?,?,?,?,?);";
+        "INSERT INTO enderecos (idCliente, cep, logradouro, numero, complemento, bairro, cidade, uf) VALUES (?,?,?,?,?,?,?,?);";
       const valuesEnd = [
         rowsCli.insertId,
         endereco.cep,
@@ -29,7 +29,7 @@ const clientesRepositories = {
       const [rowsEnd] = await conn.execute(sqlEnd, valuesEnd);
 
       conn.commit();
-      return {};
+      return { rowsCli, rowsTel, rowsEnd };
     } catch (error) {
       conn.rollback();
       throw new Error(error);
@@ -38,26 +38,40 @@ const clientesRepositories = {
     }
   },
 
-  editar: async (categoria) => {
+  put: async (categoria) => {
     const sql = "UPDATE categorias SET Nome=?, Descricao=? WHERE id=?;";
     const values = [categoria.nome, categoria.descricao, categoria.id];
     const [rows] = await connection.execute(sql, values);
     return rows;
   },
 
-  selecionar: async () => {
-    const sql = "SELECT * FROM categorias;";
+  get: async () => {
+    const sql =
+      "SELECT c.id, t.numero, e.cidade, e.cep, e.logradouro ,e.numero, e.complemento, e.bairro, e.cidade \
+    FROM clientes AS c \
+    INNER JOIN telefones AS t \
+	ON c.Id = t.idCliente \
+INNER JOiN enderecos AS e \
+	ON c.Id = e.idCliente";
     const [rows] = await connection.execute(sql);
     return rows;
   },
-  selecionarUm: async (id) => {
-    const sql = "SELECT * FROM categorias where id=?;";
+
+  getId: async (id) => {
+        const sql =
+      "SELECT c.id, t.numero, e.cidade, e.cep, e.logradouro ,e.numero, e.complemento, e.bairro, e.cidade \
+    FROM clientes AS c \
+    INNER JOIN telefones AS t \
+	ON c.Id = t.idCliente \
+INNER JOiN enderecos AS e \
+	ON c.Id = e.idCliente\
+  WHERE c.id = ?";
     const value = [id];
     const [rows] = await connection.execute(sql, value);
     return rows;
   },
 
-  deletar: async (id) => {
+  delete: async (id) => {
     const sql = "DELETE FROM categorias WHERE id=?;";
     const values = [id];
     const [rows] = await connection.execute(sql, values);

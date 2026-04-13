@@ -3,7 +3,8 @@ import clienteController from "../controllers/clientesController.js";
 
 const clienteRoutes = Router();
 
-clienteRoutes.get("/", clienteController.select);
-clienteRoutes.get("/telefones", clienteController.selectTelefone);
+clienteRoutes.get("/", clienteController.selecionar);
+clienteRoutes.get("/:id", clienteController.selecionarId);
+// clienteRoutes.get("/telefones", clienteController.selectTelefone);
 
 export default clienteRoutes;
