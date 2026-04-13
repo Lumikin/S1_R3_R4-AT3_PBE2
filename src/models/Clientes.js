@@ -57,5 +57,7 @@ export class Clientes {
     }
   }
 
-
+  static criar(dados) {
+    return new Clientes(dados.nome, dados.cpf, null);
+  }
 }

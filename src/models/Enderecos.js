@@ -2,21 +2,34 @@ export class Enderecos {
   #id;
   #clienteId;
   #cep;
-  #rua;
-  #localidade;
+  #logradouro;
+  #bairro;
   #complemento;
   #numero;
   #uf;
+  #localidade;
   //#dataCad
-  
-  constructor(id, clienteId, cep, rua, complemento, localidade, uf, numero) {
-    this.#id = id;
-    this.#clienteId = clienteId;
+
+  constructor(
+    cep,
+    logradouro,
+    numero,
+    complemento,
+    bairro,
+    localidade,
+    uf,
+    clienteId,
+    id,
+  ) {
     this.#cep = cep;
-    this.#rua = rua;
-    this.#localidade = localidade;
+    this.#logradouro = logradouro;
+    this.#numero = numero;
     this.#complemento = complemento;
+    this.#bairro = bairro;
+    this.#localidade = localidade;
     this.#uf = uf;
+    this.#clienteId = clienteId;
+    this.#id = id;
   }
 
   get id() {
@@ -29,12 +42,12 @@ export class Enderecos {
   }
 
   get clienteId() {
-    return this.#id;
+    return this.#clienteId;
   }
 
   set clienteId(value) {
     this.#validarId(value);
-    this.#id = value;
+    this.#clienteId = value;
   }
 
   get cep() {
@@ -46,6 +59,40 @@ export class Enderecos {
     this.#cep = value;
   }
 
+  get bairro() {
+    return this.#bairro;
+  }
+  set bairro(value) {
+    this.#bairro = value;
+  }
+
+  get logradouro() {
+    return this.#logradouro;
+  }
+  set logradouro(value) {
+    this.#logradouro = value;
+  }
+
+  get complemento() {
+    return this.#complemento;
+  }
+  set complemento(value) {
+    this.#complemento = value;
+  }
+
+  get localidade() {
+    return this.#localidade;
+  }
+  set localidade(value) {
+    this.#localidade = value;
+  }
+
+  get uf() {
+    return this.#uf;
+  }
+  set uf(value) {
+    this.#uf = value;
+  }
   // --- Validação --- //
 
   #validarCep(value) {
@@ -58,5 +105,20 @@ export class Enderecos {
     if (isNaN(value) || value.trim() <= 0) {
       throw new Error("O id deve ser válido");
     }
+  }
+
+  static criar(dados) {
+    console.log(dados);
+    return new Enderecos(
+      dados.cep,
+      dados.logradouro,
+      dados.numero,
+      dados.complemento,
+      dados.bairro,
+      dados.localidade,
+      dados.uf,
+      null,
+      null,
+    );
   }
 }

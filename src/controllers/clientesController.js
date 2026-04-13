@@ -1,5 +1,7 @@
+// Imports
 import { Clientes } from "../models/Clientes.js";
 import { Telefone } from "../models/Telefone.js";
+import { Enderecos } from "../models/Enderecos.js";
 import clientesRepositories from "../repositories/clientesRepositories.js";
 import { limparNumero } from "../utils/limparNumero.js";
 import { validarCPF } from "../utils/validarCPF.js";
@@ -41,27 +43,37 @@ const clienteController = {
 
   criar: async (req, res) => {
     try {
-      const { nome, cpf, cep, numero, telefone } = req.body;
+      const { nome, cpf, cep, numero, telefones } = req.body;
       // --- CPF -- //
 
-      limparNumero(cpf);
+      const Limpar = limparNumero(cpf);
       if (!validarCPF(cpf)) {
+        validarCPF(Limpar(cpf));
         return res.status(400).json({
           Message: "Digite um CPF valido!",
         });
       }
+      // --- Clientes --- //
 
+      if (!nome || nome.length < 3) {
+        return res.status(400).json({
+          Message: "Verifique o nome",
+        });
+      }
+
+      const cliente = Clientes.criar(nome, cpf);
       // --- telefone --- //
 
-      if (telefone.length != 10) {
+      if (telefones.length != 10) {
         return res.status(400).json({
           Message: "Digite um Telefone válido!",
         });
       }
+      const telefone = Telefone.criar(telefones);
 
       //--- endereco --- //
 
-      if (cep.length != 8) {
+      if (cep.length != 8 || !cep) {
         return res.status(400).json({
           Message:
             "Insira um CEP válido. \
@@ -70,9 +82,9 @@ const clienteController = {
       }
 
       const url = `https://viacep.com.br/ws/${cep}/json`;
-      const API = await fetch(url, { method: "POST" });
+      const API = await fetch(url);
+      const dadosAPI = await API.json();
 
-      
       //   "cep": "01001-000",
       //   "logradouro": "Praça da Sé",
       //   "complemento": "lado ímpar",
@@ -87,7 +99,25 @@ const clienteController = {
       //   "ddd": "11",
       //   "siafi": "7107"
 
+      const { logradouro, complemento, bairro, localidade, uf } = dadosAPI; // Pega os dados do Json da api
+
+      const endereco = Enderecos.criar(
+        cep,
+        logradouro,
+        numero,
+        complemento,
+        bairro,
+        localidade,
+        uf,
+      );
+
+      const result = await clientesRepositories.post(
+        cliente,
+        telefone,
+        endereco,
+      );
       res.status(201).json({ result });
+      console.log("RESULT:",result);
     } catch (error) {
       console.log(error);
       res.status(500).json({

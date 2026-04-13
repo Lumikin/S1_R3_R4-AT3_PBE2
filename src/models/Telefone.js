@@ -4,9 +4,9 @@ export class Telefone {
   #numero;
   //#dataCad;
 
-  constructor(idCliente, numero, id) {
-    this.#idCliente = idCliente;
+  constructor(numero, idCliente, id) {
     this.#numero = numero;
+    this.#idCliente = idCliente;
     this.#id = id;
   }
 
@@ -60,7 +60,7 @@ export class Telefone {
   // Design pattern: Factory
 
   static criar(dados) {
-    return new Produtos(dados.idCliente, dados.numero, null);
+    return new Telefone(dados.numero, null, null);
   }
 
   static editar(dados, id) {

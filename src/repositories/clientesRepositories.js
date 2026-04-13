@@ -4,7 +4,7 @@ const clientesRepositories = {
   post: async (cliente, telefone, endereco) => {
     const conn = await connection.getConnection();
     try {
-      conn.beginTransaction();
+      await conn.beginTransaction();
 
       const sqlCli = "INSERT INTO clientes (nome, cpf) VALUES (?,?);";
       const valuesCli = [cliente.nome, cliente.cpf];
@@ -23,18 +23,19 @@ const clientesRepositories = {
         endereco.numero,
         endereco.complemento,
         endereco.bairro,
-        endereco.cidade,
+        endereco.localidade,
         endereco.uf,
       ];
+      
       const [rowsEnd] = await conn.execute(sqlEnd, valuesEnd);
-
+console.log("valuesEnd",valuesEnd)
       conn.commit();
       return { rowsCli, rowsTel, rowsEnd };
     } catch (error) {
-      conn.rollback();
+      await conn.rollback();
       throw new Error(error);
     } finally {
-      conn.realease();
+      await conn.release();
     }
   },
 
