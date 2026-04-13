@@ -72,8 +72,9 @@ const clienteController = {
       const telefone = Telefone.criar(telefones);
 
       //--- endereco --- //
+      //TODO: Arrumar que os dados não estao sendo armazenados nas variaveis
 
-      if (cep.length != 8 || !cep) {
+      if (cep.length != 8) {
         return res.status(400).json({
           Message:
             "Insira um CEP válido. \
@@ -117,7 +118,7 @@ const clienteController = {
         endereco,
       );
       res.status(201).json({ result });
-      console.log("RESULT:",result);
+      console.log(result);
     } catch (error) {
       console.log(error);
       res.status(500).json({
