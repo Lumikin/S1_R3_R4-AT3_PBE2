@@ -1,7 +1,6 @@
 import { Clientes } from "../models/Clientes.js";
 import { Telefone } from "../models/Telefone.js";
 import clientesRepositories from "../repositories/clientesRepositories.js";
-import telefoneRepositories from "../repositories/telefoneReposiotries.js";
 
 const clienteController = {
   select: async (req, res) => {
@@ -19,7 +18,7 @@ const clienteController = {
   },
   selectTelefone: async (req, res) => {
     try {
-      const result = await telefoneRepositories.select();
+      const result = await clientesRepositories.telefoneSelect();
       if (result.length === 0) {
         return res
           .status(200)

@@ -2,21 +2,11 @@ export class Clientes {
   #id;
   #nome;
   #cpf;
-  #cep;
-  #rua;
-  #localidade;
-  #complemento;
-  #uf;
   //#dataCad
 
   constructor(nome, cpf, cep, rua, localidade, complemento, uf, id) {
     this.#nome = nome;
     this.#cpf = cpf;
-    this.#cep = cep;
-    this.#rua = rua;
-    this.#localidade = localidade;
-    this.#complemento = complemento;
-    this.#uf = uf;
     this.#id = id;
   }
 
@@ -47,15 +37,6 @@ export class Clientes {
     this.#cpf = value;
   }
 
-  get cep() {
-    return this.#cep;
-  }
-
-  set cep(value) {
-    this.#validarCep(value);
-    this.#cep = value;
-  }
-
   // --- Validação --- //
 
   #validarId(value) {
@@ -76,9 +57,5 @@ export class Clientes {
     }
   }
 
-  #validarCep(value) {
-    if (!value || isNaN(value) || value.trim() <= 0) {
-      throw new Error("Digite um CEP válido");
-    }
-  }
+
 }
