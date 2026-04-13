@@ -57,15 +57,13 @@ export class Telefone {
     }
   }
 
-  // Static
+  // Design pattern: Factory
 
   static criar(dados) {
-    return new Produtos(
-      dados.idCliente,
-      dados.numero,
-      dados.idCategoria,
-      dados.caminhoImagem,
-      null,
-    );
+    return new Produtos(dados.idCliente, dados.numero, null);
+  }
+
+  static editar(dados, id) {
+    return new Produtos(dados.idCliente, dados.numero, id);
   }
 }

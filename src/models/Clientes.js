@@ -9,10 +9,15 @@ export class Clientes {
   #uf;
   //#dataCad
 
-  constructor(nome, cpf, cep, id, rua, localidade, complemento, uf) {
+  constructor(nome, cpf, cep, rua, localidade, complemento, uf, id) {
     this.#nome = nome;
-    this.#cpf = valor;
-    this.#cep = idCategoria;
+    this.#cpf = cpf;
+    this.#cep = cep;
+    this.#rua = rua;
+    this.#localidade = localidade;
+    this.#complemento = complemento;
+    this.#uf = uf;
+    this.#id = id;
   }
 
   get id() {
