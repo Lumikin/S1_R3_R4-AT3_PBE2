@@ -1,7 +1,14 @@
-//TODO: Acessar a Rota GET do ViaCEP com o cep que o ususario digitar usando AXIOS
+import axios from "axios";
 
-import { axios } from "axios";
-
-export function viaCEP(cep) {
-    axios.get()
+export default async function viaCEP(cep) {
+  try {
+    const url = `https://viacep.com.br/ws/${cep}/json/`
+    const response = await axios.get(url)
+    return response
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Ocorreu um erro na API",
+    });
+  }
 }

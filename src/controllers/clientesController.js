@@ -5,6 +5,7 @@ import { Enderecos } from "../models/Enderecos.js";
 import clientesRepositories from "../repositories/clientesRepositories.js";
 import { limparNumero } from "../utils/limparNumero.js";
 import { validarCPF } from "../utils/validarCPF.js";
+import viaCEP from "../utils/viaCEP.js";
 
 const clienteController = {
   selecionar: async (req, res) => {
@@ -44,65 +45,54 @@ const clienteController = {
   criar: async (req, res) => {
     try {
       const { nome, cpf, cep, numero, telefones } = req.body;
-      // --- CPF -- //
 
-      const Limpar = limparNumero(cpf);
-      if (!validarCPF(cpf)) {
-        validarCPF(Limpar(cpf));
+      // --- CPF -- //
+      const cpfLimpo = limparNumero(cpf);
+      // Valida diretamente o CPF limpo
+      if (!validarCPF(cpfLimpo)) {
         return res.status(400).json({
           Message: "Digite um CPF valido!",
         });
       }
-      // --- Clientes --- //
 
+      // --- Clientes --- //
       if (!nome || nome.length < 3) {
         return res.status(400).json({
           Message: "Verifique o nome",
         });
       }
 
-      const cliente = Clientes.criar(nome, cpf);
-      // --- telefone --- //
+      // CORREÇÃO: Passando como objeto { nome, cpf: cpfLimpo }
+      const cliente = Clientes.criar({ nome, cpf: cpfLimpo });
 
+      // --- telefone --- //
       if (telefones.length != 10) {
         return res.status(400).json({
           Message: "Digite um Telefone válido!",
         });
       }
-      const telefone = Telefone.criar(telefones);
+      // CORREÇÃO: Passando como objeto (assumindo que a classe siga o mesmo padrão)
+      const telefone = Telefone.criar({ telefones });
 
       //--- endereco --- //
-      //TODO: Arrumar que os dados não estao sendo armazenados nas variaveis
-
       if (cep.length != 8) {
         return res.status(400).json({
           Message:
-            "Insira um CEP válido. \
-          Não sabe o seu CEP? http://www.buscacep.correios.com.br/",
+            "Insira um CEP válido. Não sabe o seu CEP? http://www.buscacep.correios.com.br/",
         });
       }
 
-      const url = `https://viacep.com.br/ws/${cep}/json`;
-      const API = await fetch(url);
-      const dadosAPI = await API.json();
+      const Api = await viaCEP(cep);
+      const response = Api.data;
 
-      //   "cep": "01001-000",
-      //   "logradouro": "Praça da Sé",
-      //   "complemento": "lado ímpar",
-      //   "unidade": "",
-      //   "bairro": "Sé",
-      //   "localidade": "São Paulo",
-      //   "uf": "SP",
-      //   "estado": "São Paulo",
-      //   "regiao": "Sudeste",
-      //   "ibge": "3550308",
-      //   "gia": "1004",
-      //   "ddd": "11",
-      //   "siafi": "7107"
+      const logradouro = response.logradouro;
+      const complemento = response.complemento;
+      const bairro = response.bairro;
+      const localidade = response.localidade;
+      const uf = response.uf;
 
-      const { logradouro, complemento, bairro, localidade, uf } = dadosAPI; // Pega os dados do Json da api
-
-      const endereco = Enderecos.criar(
+      // CORREÇÃO: Passando todos os parâmetros dentro de um único objeto
+      const endereco = Enderecos.criar({
         cep,
         logradouro,
         numero,
@@ -110,7 +100,7 @@ const clienteController = {
         bairro,
         localidade,
         uf,
-      );
+      });
 
       const result = await clientesRepositories.post(
         cliente,
@@ -118,7 +108,6 @@ const clienteController = {
         endereco,
       );
       res.status(201).json({ result });
-      console.log(result);
     } catch (error) {
       console.log(error);
       res.status(500).json({

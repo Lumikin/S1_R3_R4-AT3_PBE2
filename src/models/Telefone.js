@@ -60,6 +60,7 @@ export class Telefone {
   // Design pattern: Factory
 
   static criar(dados) {
+    console.log('Criar Telefone:',dados)
     return new Telefone(dados.numero, null, null);
   }
 

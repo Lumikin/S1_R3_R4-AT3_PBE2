@@ -108,7 +108,7 @@ export class Enderecos {
   }
 
   static criar(dados) {
-    console.log(dados);
+    console.log('Criar Enderecos:',dados);
     return new Enderecos(
       dados.cep,
       dados.logradouro,

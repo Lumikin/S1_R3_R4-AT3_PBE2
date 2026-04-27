@@ -58,6 +58,7 @@ export class Clientes {
   }
 
   static criar(dados) {
+    console.log('Criar Clientes',dados)
     return new Clientes(dados.nome, dados.cpf, null);
   }
 }

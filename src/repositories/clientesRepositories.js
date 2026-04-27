@@ -27,9 +27,8 @@ const clientesRepositories = {
         endereco.localidade,
         endereco.uf,
       ];
-      
+      console.log(valuesEnd)
       const [rowsEnd] = await conn.execute(sqlEnd, valuesEnd);
-console.log("valuesEnd",valuesEnd)
       conn.commit();
       return { rowsCli, rowsTel, rowsEnd };
     } catch (error) {
